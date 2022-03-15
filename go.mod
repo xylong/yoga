@@ -1,4 +1,4 @@
-module yoga
+module github.com/xylong/yoga
 
 go 1.17
 

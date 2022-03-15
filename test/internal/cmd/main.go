@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"yoga/routes"
+	"github.com/xylong/yoga/test/internal/routes"
 )
 
 func main() {

@@ -1,10 +1,8 @@
-package routes
+package yoga
 
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"yoga/context"
-	"yoga/response"
 )
 
 const (
@@ -17,39 +15,39 @@ const (
 
 type (
 	method int
-	action func(*context.Context) *response.Response
+	action func(*Context) *Response
 )
 
 type router struct {
 	*gin.Engine
 }
 
-func newRouter(engine *gin.Engine) *router {
+func NewRouter(engine *gin.Engine) *router {
 	return &router{Engine: engine}
 }
 
-func (r *router) Group(path string, callback func(group), middlewares ...context.HandlerFunc) {
-	callback(group{
+func (r *router) Group(path string, callback func(Group), middlewares ...HandlerFunc) {
+	callback(Group{
 		engine:      r.Engine,
 		path:        path,
 		middlewares: middlewares,
 	})
 }
 
-type group struct {
+type Group struct {
 	engine      *gin.Engine
 	path        string
-	middlewares []context.HandlerFunc
+	middlewares []HandlerFunc
 }
 
-func (g group) Group(path string, callback func(group), middlewares ...context.HandlerFunc) {
+func (g Group) Group(path string, callback func(Group), middlewares ...HandlerFunc) {
 	// 父级的中间件在前面
 	g.middlewares = append(g.middlewares, middlewares...)
 	g.path += path
 	callback(g)
 }
 
-func (g group) Registered(m method, url string, a action, middlewares ...context.HandlerFunc) {
+func (g Group) Registered(m method, url string, a action, middlewares ...HandlerFunc) {
 	// 父类中间件+当前action中间件+action
 	handlers := make([]gin.HandlerFunc, len(g.middlewares)+len(middlewares)+1)
 
@@ -60,7 +58,7 @@ func (g group) Registered(m method, url string, a action, middlewares ...context
 	for key, middleware := range g.middlewares {
 		temp := middleware
 		handlers[key] = func(c *gin.Context) {
-			temp(&context.Context{Context: c})
+			temp(&Context{Context: c})
 		}
 	}
 	//添加action
@@ -83,7 +81,7 @@ func (g group) Registered(m method, url string, a action, middlewares ...context
 
 func convert(f action) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		rsp := f(&context.Context{Context: ctx})
+		rsp := f(&Context{Context: ctx})
 		data := rsp.GetData()
 
 		switch item := data.(type) {
