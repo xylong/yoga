@@ -17,6 +17,6 @@ func Profile(ctx *yoga.Context) *yoga.Response {
 	return yoga.Resp().Json(gin.H{"data": ctx.Param("id")})
 }
 
-func Me(cctx *yoga.Context) *yoga.Response {
+func Me(ctx *yoga.Context) *yoga.Response {
 	return yoga.Resp().Json(gin.H{"data": "user"})
 }
