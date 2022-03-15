@@ -3,24 +3,27 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"yoga/context"
 	"yoga/controller"
 	"yoga/response"
 )
+
+type action func(*context.Context) *response.Response
 
 func Load(engine *gin.Engine) {
 	engine.GET("/", convert(controller.Index))
 }
 
-func convert(f func(ctx *gin.Context) *response.Response) gin.HandlerFunc {
-	return func(context *gin.Context) {
-		rsp := f(context)
+func convert(f action) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		rsp := f(&context.Context{Context: ctx})
 		data := rsp.GetData()
 
 		switch item := data.(type) {
 		case string:
-			context.String(http.StatusOK, item)
+			ctx.String(http.StatusOK, item)
 		case gin.H:
-			context.JSON(http.StatusOK, item)
+			ctx.JSON(http.StatusOK, item)
 		}
 	}
 }
