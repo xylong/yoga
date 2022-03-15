@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"yoga/controller"
+	"yoga/middleware"
 )
 
 func Load(engine *gin.Engine) {
@@ -11,10 +12,11 @@ func Load(engine *gin.Engine) {
 
 		g.Registered(POST, "/register", controller.Register)
 		g.Registered(POST, "/login", controller.Login)
+		g.Registered(GET, "/users/:id", controller.Profile)
 
-		g.Group("/users", func(g group) {
-			g.Registered(GET, "/:id", controller.Profile)
-		})
-	})
-	engine.GET("/", convert(controller.Index))
+		g.Group("", func(g group) {
+			g.Registered(GET, "/me", controller.Me)
+		}, middleware.Authorization)
+
+	}, middleware.Log)
 }
