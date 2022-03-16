@@ -2,7 +2,6 @@ package yoga
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type Yoga struct {
@@ -14,10 +13,8 @@ func Ignite() *Yoga {
 }
 
 func (y *Yoga) Handle(httpMethod, relativePath string, handler interface{}) {
-	if h, ok := handler.(func(ctx *gin.Context) string); ok {
-		y.Engine.Handle(httpMethod, relativePath, func(context *gin.Context) {
-			context.String(http.StatusOK, h(context))
-		})
+	if h := Convert(handler); h != nil {
+		y.Engine.Handle(httpMethod, relativePath, h)
 	}
 }
 
