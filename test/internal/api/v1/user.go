@@ -41,3 +41,7 @@ func (u *User) Friends(ctx *gin.Context) yoga.Slice {
 
 	return yoga.MakeModels(users)
 }
+
+func (u *User) Logoff(ctx *gin.Context) {
+
+}

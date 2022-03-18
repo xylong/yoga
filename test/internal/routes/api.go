@@ -6,14 +6,23 @@ import (
 	"net/http"
 )
 
-func Load(yoga *yoga.Yoga) *yoga.Yoga {
-
-	yoga.G("v1", func() {
+func Load(y *yoga.Yoga) *yoga.Yoga {
+	y.G("v1", func(y yoga.Yoga) {
 		user := v1.NewUser()
-		yoga.Handle(http.MethodGet, "register", user.Register)
-		yoga.Handle(http.MethodGet, "me", user.Me)
-		yoga.Handle(http.MethodGet, "friends", user.Friends)
+		y.Handle(http.MethodGet, "register", user.Register)
+
+		y.G("/a", func(y yoga.Yoga) {
+			y.Handle(http.MethodGet, "me", user.Me)
+
+			y.G("/b", func(y yoga.Yoga) {
+				y.Handle(http.MethodGet, "friends", user.Friends)
+
+			})
+		})
+
+		y.Handle(http.MethodDelete, "logoff", user.Logoff)
+
 	})
 
-	return yoga
+	return y
 }
