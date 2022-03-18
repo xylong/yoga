@@ -6,6 +6,7 @@ import (
 
 type Yoga struct {
 	*gin.Engine
+	group *gin.RouterGroup
 }
 
 func Ignite() *Yoga {
@@ -14,8 +15,13 @@ func Ignite() *Yoga {
 
 func (y *Yoga) Handle(httpMethod, relativePath string, handler interface{}) {
 	if h := Convert(handler); h != nil {
-		y.Engine.Handle(httpMethod, relativePath, h)
+		y.group.Handle(httpMethod, relativePath, h)
 	}
+}
+
+func (y *Yoga) G(path string, callback func())  {
+	y.group = y.Group(path)
+	callback()
 }
 
 func (y *Yoga) Launch() {

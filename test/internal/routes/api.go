@@ -7,10 +7,13 @@ import (
 )
 
 func Load(yoga *yoga.Yoga) *yoga.Yoga {
-	user := v1.NewUser()
-	yoga.Handle(http.MethodGet, "register", user.Register)
-	yoga.Handle(http.MethodGet, "me", user.Me)
-	yoga.Handle(http.MethodGet, "friends", user.Friends)
+
+	yoga.G("v1", func() {
+		user := v1.NewUser()
+		yoga.Handle(http.MethodGet, "register", user.Register)
+		yoga.Handle(http.MethodGet, "me", user.Me)
+		yoga.Handle(http.MethodGet, "friends", user.Friends)
+	})
 
 	return yoga
 }
