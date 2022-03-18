@@ -45,3 +45,7 @@ func (u *User) Friends(ctx *gin.Context) yoga.Slice {
 func (u *User) Logoff(ctx *gin.Context) {
 
 }
+
+func (u *User) Profile(ctx *gin.Context) {
+
+}

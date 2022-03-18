@@ -7,21 +7,23 @@ import (
 )
 
 func Load(y *yoga.Yoga) *yoga.Yoga {
-	y.G("v1", func(y yoga.Yoga) {
+	y.Group("v1", func(group yoga.Group) {
 		user := v1.NewUser()
-		y.Handle(http.MethodGet, "register", user.Register)
+		group.Handle(http.MethodGet, "register", user.Register)
 
-		y.G("/a", func(y yoga.Yoga) {
-			y.Handle(http.MethodGet, "me", user.Me)
+		group.Group("/a", func(group yoga.Group) {
+			group.Handle(http.MethodGet, "me", user.Me)
 
-			y.G("/b", func(y yoga.Yoga) {
-				y.Handle(http.MethodGet, "friends", user.Friends)
+			group.Group("/b", func(group yoga.Group) {
+				group.Handle(http.MethodGet, "friends", user.Friends)
 
+				group.Group("/c", func(group yoga.Group) {
+					group.Handle(http.MethodPost, "/users/:id", user.Profile)
+				})
 			})
 		})
 
-		y.Handle(http.MethodDelete, "logoff", user.Logoff)
-
+		group.Handle(http.MethodDelete, "logoff", user.Logoff)
 	})
 
 	return y
