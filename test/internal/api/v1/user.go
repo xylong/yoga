@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/xylong/yoga"
 	"github.com/xylong/yoga/test/internal/model"
@@ -18,6 +19,7 @@ func (u *User) Register(ctx *gin.Context) string {
 }
 
 func (u *User) Me(ctx *gin.Context) yoga.Model {
+	fmt.Println("xxoo")
 	return &model.User{
 		ID:       1,
 		Phone:    "19999999999",
@@ -42,10 +44,10 @@ func (u *User) Friends(ctx *gin.Context) yoga.Slice {
 	return yoga.MakeModels(users)
 }
 
-func (u *User) Logoff(ctx *gin.Context) {
-
+func (u *User) Logoff(ctx *gin.Context) string {
+	return "注销"
 }
 
-func (u *User) Profile(ctx *gin.Context) {
-
+func (u *User) Profile(ctx *gin.Context) string {
+	return "用户资料"
 }
