@@ -14,7 +14,7 @@ func NewCsrf() *Csrf {
 
 func (c *Csrf) Before(ctx *gin.Context) error {
 	fmt.Println("csrf Before", ctx.FullPath())
-	return nil
+	return fmt.Errorf("test error")
 }
 
 func (c *Csrf) After(data interface{}) (interface{}, error) {

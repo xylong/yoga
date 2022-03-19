@@ -19,7 +19,6 @@ func (u *User) Register(ctx *gin.Context) string {
 }
 
 func (u *User) Me(ctx *gin.Context) yoga.Model {
-	fmt.Println("xxoo")
 	return &model.User{
 		ID:       1,
 		Phone:    "19999999999",
@@ -45,9 +44,14 @@ func (u *User) Friends(ctx *gin.Context) yoga.Slice {
 }
 
 func (u *User) Logoff(ctx *gin.Context) string {
+	fmt.Println("xxoo")
 	return "注销"
 }
 
 func (u *User) Profile(ctx *gin.Context) string {
 	return "用户资料"
+}
+
+func Foo(ctx *gin.Context) string {
+	return "测试非结构体方法"
 }

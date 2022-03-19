@@ -23,6 +23,7 @@ func Load(y *yoga.Yoga) *yoga.Yoga {
 			})
 		}, middleware.NewCsrf())
 		y.Handle(http.MethodDelete, "logoff", user.Logoff, middleware.NewAuthorization())
+		y.Handle(http.MethodGet, "foo", v1.Foo)
 	})
 
 	return y
