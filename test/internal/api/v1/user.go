@@ -18,6 +18,10 @@ func (u *User) Register(ctx *gin.Context) string {
 	return "注册"
 }
 
+func (u *User) Login(ctx *gin.Context) string {
+	return "登录"
+}
+
 func (u *User) Me(ctx *gin.Context) yoga.Model {
 	return &model.User{
 		ID:       1,

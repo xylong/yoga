@@ -10,20 +10,15 @@ import (
 func Load(y *yoga.Yoga) *yoga.Yoga {
 	y.Group("v1", func(y yoga.Yoga) {
 		user := v1.NewUser()
-		y.Handle(http.MethodGet, "register", user.Register)
 
-		y.Group("/a", func(y yoga.Yoga) {
+		y.Group("", func(y yoga.Yoga) {
 			y.Handle(http.MethodGet, "me", user.Me)
-			y.Group("/b", func(y yoga.Yoga) {
-				y.Handle(http.MethodGet, "friends", user.Friends)
+			y.Handle(http.MethodGet, "friends", user.Friends)
+			y.Handle(http.MethodDelete, "logoff", user.Logoff)
+		}, middleware.NewAuthorization())
 
-				y.Group("c", func(y yoga.Yoga) {
-					y.Handle(http.MethodPost, "users/:id", user.Profile)
-				}, middleware.NewAuthorization())
-			})
-		}, middleware.NewCsrf())
-		y.Handle(http.MethodDelete, "logoff", user.Logoff, middleware.NewAuthorization())
-		y.Handle(http.MethodGet, "foo", v1.Foo)
+		y.Handle(http.MethodPost, "register", user.Register)
+		y.Handle(http.MethodPost, "login", user.Login)
 	})
 
 	return y

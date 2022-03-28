@@ -42,6 +42,8 @@ func (y *Yoga) Handle(httpMethod, relativePath string, handler interface{}, midd
 
 		// 执行顺讯：全局中间件->父级中间件->路由级中间件->路由回调
 		y.Engine.Handle(httpMethod, finalUrl, func(context *gin.Context) {
+			context.Set("middlewares", y.middlewares)
+
 			for _, middleware := range y.middlewares {
 				if err := middleware.Before(context); err != nil {
 					context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{

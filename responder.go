@@ -42,7 +42,14 @@ type StringResponder func(*gin.Context) string
 
 func (r StringResponder) Return() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		context.String(http.StatusOK, r(context))
+		data := r(context)
+		if middlewares, exists := context.Get("middlewares"); exists {
+			for _, middleware := range middlewares.([]Middleware) {
+				middleware.After(data)
+			}
+		}
+
+		context.String(http.StatusOK, data)
 	}
 }
 
