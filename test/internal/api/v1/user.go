@@ -19,6 +19,7 @@ func (u *User) Register(ctx *gin.Context) string {
 }
 
 func (u *User) Login(ctx *gin.Context) string {
+	fmt.Println("login")
 	return "登录"
 }
 

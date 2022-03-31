@@ -3,14 +3,13 @@ package yoga
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"strings"
 )
 
 type Yoga struct {
 	*gin.Engine
 	group       string
-	middlewares []Middleware
+	middlewares middlewares
 }
 
 // Ignite 初始化
@@ -40,19 +39,11 @@ func (y *Yoga) Handle(httpMethod, relativePath string, handler interface{}, midd
 		y.joinMiddleware(middlewares...)
 		finalUrl := y.group + "/" + relativePath
 
-		// 执行顺讯：全局中间件->父级中间件->路由级中间件->路由回调
+		// 中间件按洋葱模型执行前置和后置操作：
+		// 全局中间件(前)->父级中间件(前)->路由级中间件(前)->路由回调->路由级中间件(后)->父级中间件(后)->全局中间件(后)
 		y.Engine.Handle(httpMethod, finalUrl, func(context *gin.Context) {
 			context.Set("middlewares", y.middlewares)
-
-			for _, middleware := range y.middlewares {
-				if err := middleware.Before(context); err != nil {
-					context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-						"error": err.Error(),
-					})
-				}
-
-				context.Next()
-			}
+			y.middlewares.before(context)
 		}, h)
 	}
 }
