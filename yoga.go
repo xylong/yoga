@@ -3,6 +3,7 @@ package yoga
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strings"
 )
 
@@ -42,9 +43,20 @@ func (y *Yoga) Handle(httpMethod, relativePath string, handler interface{}, midd
 		// 中间件按洋葱模型执行前置和后置操作：
 		// 全局中间件(前)->父级中间件(前)->路由级中间件(前)->路由回调->路由级中间件(后)->父级中间件(后)->全局中间件(后)
 		y.Engine.Handle(httpMethod, finalUrl, func(context *gin.Context) {
-			context.Set("middlewares", y.middlewares)
 			y.middlewares.before(context)
-		}, h)
+		}, func(context *gin.Context) {
+			h(context)
+			data := y.middlewares.after(context)
+			if r, ok := data.(gin.H); ok {
+				context.JSON(http.StatusOK, r)
+			}
+			if r, ok := data.(string); ok {
+				context.String(http.StatusOK, r)
+			}
+			if r, ok := data.(Model); ok {
+				context.JSON(http.StatusOK, r)
+			}
+		})
 	}
 }
 

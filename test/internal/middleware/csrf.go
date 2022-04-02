@@ -13,12 +13,11 @@ func NewCsrf() *Csrf {
 }
 
 func (c *Csrf) Before(ctx *gin.Context) error {
-	fmt.Println("csrf Before", ctx.FullPath())
-	//return fmt.Errorf("test error")
+	fmt.Println("csrf Before")
 	return nil
 }
 
 func (c *Csrf) After(data interface{}) (interface{}, error) {
 	fmt.Println("csrf after")
-	return nil, nil
+	return data, nil
 }

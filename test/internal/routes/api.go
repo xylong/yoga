@@ -19,6 +19,7 @@ func Load(y *yoga.Yoga) *yoga.Yoga {
 
 		y.Handle(http.MethodPost, "register", user.Register)
 		y.Handle(http.MethodPost, "login", user.Login)
+		y.Handle(http.MethodGet, "foo", v1.Foo)
 
 	}, middleware.NewCsrf())
 

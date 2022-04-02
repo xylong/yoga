@@ -42,13 +42,7 @@ type StringResponder func(*gin.Context) string
 
 func (r StringResponder) Return() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		data := r(context)
-
-		if ms, exists := context.Get("middlewares"); exists {
-			ms.(middlewares).after(context, data)
-		}
-
-		context.String(http.StatusOK, data)
+		context.Set("return", r(context))
 	}
 }
 
@@ -57,7 +51,7 @@ type JsonResponder func(*gin.Context) Model
 
 func (r JsonResponder) Return() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		context.JSON(http.StatusOK, r(context))
+		context.Set("return", r(context))
 	}
 }
 

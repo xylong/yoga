@@ -49,7 +49,7 @@ func (u *User) Friends(ctx *gin.Context) yoga.Slice {
 }
 
 func (u *User) Logoff(ctx *gin.Context) string {
-	fmt.Println("xxoo")
+	fmt.Println("action")
 	return "注销"
 }
 
@@ -57,6 +57,6 @@ func (u *User) Profile(ctx *gin.Context) string {
 	return "用户资料"
 }
 
-func Foo(ctx *gin.Context) string {
-	return "测试非结构体方法"
+func Foo(ctx *gin.Context) {
+	fmt.Println("测试非结构体方法")
 }

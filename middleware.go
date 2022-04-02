@@ -32,15 +32,16 @@ func (m middlewares) before(ctx *gin.Context) {
 
 // after 执行所有中间件后置方法
 // 后置中间件按先入后出执行
-func (m middlewares) after(ctx *gin.Context, data interface{}) interface{} {
-	result := data
+func (m middlewares) after(ctx *gin.Context) interface{} {
+	data, _ := ctx.Get("return")
+
 	for i := len(m) - 1; i >= 0; i-- {
 		if res, err := m[i].After(data); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		} else {
-			result = res
+			data = res
 		}
 	}
 
-	return result
+	return data
 }
